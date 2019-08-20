@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://sprites/fishTile_081.png" type="Texture" id=1]
+[ext_resource path="res://scripts/FishMove.gd" type="Script" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 19.0917
+
+[node name="Fish" type="Sprite"]
+position = Vector2( 50, 50 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 8.81149, 0.451874 )
+shape = SubResource( 1 )
+[connection signal="input_event" from="Area2D" to="." method="_on_clicked"]
