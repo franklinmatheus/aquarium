@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/fishTile_077.png-fee09a1231e5d7dbb3f4c2ce63aea692.stex"
+path="res://.import/fishTile_091.png-258d10b0c1f8e354f469baee2897c3b0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/fishTile_077.png"
-dest_files=[ "res://.import/fishTile_077.png-fee09a1231e5d7dbb3f4c2ce63aea692.stex" ]
+source_file="res://sprites/fishTile_091.png"
+dest_files=[ "res://.import/fishTile_091.png-258d10b0c1f8e354f469baee2897c3b0.stex" ]
 
 [params]
 
