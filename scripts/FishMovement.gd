@@ -21,7 +21,7 @@ func _ready():
 	currentDuration = energyDuration
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):		
+func _process(delta):
 	currentDuration -= delta
 	
 	if currentDuration <= 0:
@@ -44,7 +44,7 @@ func _process(delta):
 		
 	flip_h = false
 	flip_v = false
-	
+	print(energy)
 	if currentState == "normal":
 		normal_state(delta)
 	elif currentState == "observando":
@@ -127,12 +127,13 @@ func look_straight():
 	lookingAtFood = false
 
 func _on_Area2D_area_entered(area):
-	if currentState != "morto":
-		if area.is_in_group("food"):
-			area.eaten = true
-			energy += 1
-			
-			if energy > maxEnergy:
-				currentState = "morto"
-			else:
-				currentState = "normal"
+	if currentState == "morto":
+		return
+	if area.is_in_group("food"):
+		area.eaten = true
+		energy += 1
+		
+		if energy > maxEnergy:
+			currentState = "morto"
+		else:
+			currentState = "normal"
