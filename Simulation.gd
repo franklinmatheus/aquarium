@@ -80,6 +80,7 @@ func reset_fishes():
 	for fish in fishes:
 		fish.position = fish.extras.initialPosition
 		fish.direction = fish.extras.initialDirection
+		fish.extras.foodEatenToday = 0
 
 func create_fishes():
 	for i in range(0, initialPopulation):
