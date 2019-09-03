@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Aquarius Simulator"
-run/main_scene="res://scenes/aquarium.tscn"
+run/main_scene="res://scenes/Simulation.tscn"
 config/icon="res://icon.png"
 
 [rendering]

@@ -1,13 +1,16 @@
 extends Sprite
 
-var direction            = 1
-export var normalSpeed   = 50
+var direction = 1
+export var normalSpeed = 50
 export var foodRadarSize = 100
-var currentSpeed         = 50
-var lookingAtFood        = false
-var currentState         = "normal"
-var currentFood          = null
-var margin               = 28
+var currentSpeed = 50
+var lookingAtFood = false
+var currentState = "normal"
+var currentFood = null
+var margin = 28
+var extras = {}
+
+signal food_eaten(fish)
 
 export (Texture) var normalTexture = null
 export (Texture) var deadTexture = null
@@ -44,7 +47,7 @@ func _process(delta):
 		
 	flip_h = false
 	flip_v = false
-	print(energy)
+	
 	if currentState == "normal":
 		normal_state(delta)
 	elif currentState == "observando":
@@ -132,6 +135,7 @@ func _on_Area2D_area_entered(area):
 	if area.is_in_group("food"):
 		area.eaten = true
 		energy += 1
+		emit_signal("food_eaten", self)
 		
 		if energy > maxEnergy:
 			currentState = "morto"
