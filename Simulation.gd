@@ -12,8 +12,8 @@ export var energyRangeMax = 10
 export var radarSizeRangeMin = 50 
 export var radarSizeRangeMax = 100
 
-export var initialPopulation = 10
-export var dailyFood = 10
+export var initialPopulation = 100
+export var dailyFood = 20
 export var mutationRate = 0.2
 
 var foods = []
@@ -30,8 +30,8 @@ func _process(delta):
 	
 	if !has_any_food():
 		clear_dead_fishes()
-		reset_fishes()
 		reproduce()
+		reset_fishes()
 		create_foods()
 
 func reproduce():
@@ -70,17 +70,20 @@ func clear_dead_fishes():
 		index += 1
 		if fish.currentState == "morto":
 			toRemove.push_front(index)
+			print(fish.normalSpeed, ', ', fish.maxEnergy, ', ', fish.foodRadarSize, ', ', fish.extras.loops)
 	
 	for i in toRemove:
 		fishes[i].queue_free()
 		fishes.remove(i)
-	
 
 func reset_fishes():
 	for fish in fishes:
 		fish.position = fish.extras.initialPosition
 		fish.direction = fish.extras.initialDirection
 		fish.extras.foodEatenToday = 0
+		fish.extras.age += 1
+	
+	print(len(fishes))
 
 func create_fishes():
 	for i in range(0, initialPopulation):
@@ -127,6 +130,7 @@ func create_fish(parent):
 	fish.extras.initialPosition = Vector2(fish.position.x, fish.position.y)
 	fish.extras.initialDirection = fish.direction
 	fish.extras.foodEatenToday = 0
+	fish.extras.age = 0
 	
 	fish.connect("food_eaten", self, "on_food_eaten")
 	
