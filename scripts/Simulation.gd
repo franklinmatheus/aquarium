@@ -12,20 +12,22 @@ export var energyRangeMax = 10
 export var radarSizeRangeMin = 50 
 export var radarSizeRangeMax = 100
 
-export var initialPopulation = 100
+export var initialPopulation = 250
 export var dailyFood = 25
 export var mutationRate = 0.2
 
 var foods = []
 var fishes = []
 
-var fishes_data = ''
-
 func _ready():
 	randomize()
 	create_fishes()
 	create_foods()
-	pass
+	
+	var save_data = File.new()
+	save_data.open("user://fishes_data.csv", File.WRITE)
+	save_data.store_string('normalSpeed,maxEnergy,foodRadarSize,foodEatenMean,age\n')
+	save_data.close()
 
 func _process(delta):
 	food_step()
@@ -35,9 +37,10 @@ func _process(delta):
 		reproduce()
 		reset_fishes()
 		create_foods()
-	else:
-		if !has_alive_fishes():
-			print(fishes_data)
+	
+	if !has_alive_fishes():
+		clear_dead_fishes()
+		get_tree().quit()
 
 func reproduce():
 	for fish in fishes:
@@ -70,21 +73,37 @@ func has_any_food():
 func has_alive_fishes():
 	for fish in fishes:
 		if fish.currentState != "morto":
-			continue
-		else:
 			return true
 	return false
 
+func mean_list(list):
+	if len(list) == 0:
+		return 0
+		
+	var sum = 0
+	for item in list:
+		sum += item
+	return sum/len(list)
+	
 func clear_dead_fishes():
 	var toRemove = []
 	var index = -1
+	var save_data = File.new()
+	save_data.open("user://fishes_data.csv", File.READ_WRITE)
+	save_data.seek_end()
 	
 	for fish in fishes:
 		index += 1
 		if fish.currentState == "morto":
 			toRemove.push_front(index)
-			fishes_data += str(fish.normalSpeed)+','+str(fish.maxEnergy)+','+str(fish.foodRadarSize)+','+str(fish.extras.age)+'\n'
+			save_data.store_string(str(fish.normalSpeed)+','+
+				str(fish.maxEnergy)+','+
+				str(fish.foodRadarSize)+','+
+				str(mean_list(fish.extras.food_history))+','+
+				str(fish.extras.age)+'\n'
+			)
 	
+	save_data.close()
 	for i in toRemove:
 		fishes[i].queue_free()
 		fishes.remove(i)
@@ -93,11 +112,9 @@ func reset_fishes():
 	for fish in fishes:
 		fish.position = fish.extras.initialPosition
 		fish.direction = fish.extras.initialDirection
+		fish.extras.food_history.append(fish.extras.foodEatenToday)
 		fish.extras.foodEatenToday = 0
 		fish.extras.age += 1
-		
-	if len(fishes) == 0:
-		print(fishes_data)
 
 func create_fishes():
 	for i in range(0, initialPopulation):
@@ -145,6 +162,7 @@ func create_fish(parent):
 	fish.extras.initialDirection = fish.direction
 	fish.extras.foodEatenToday = 0
 	fish.extras.age = 0
+	fish.extras.food_history = []
 	
 	fish.connect("food_eaten", self, "on_food_eaten")
 	

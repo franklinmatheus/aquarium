@@ -25,6 +25,10 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if currentState == "morto":
+		dead_state(delta)
+		return
+		
 	currentDuration -= delta
 	
 	if currentDuration <= 0:
@@ -56,8 +60,6 @@ func _process(delta):
 		full_state(delta)
 	elif currentState == "faminto":
 		starving_state(delta)
-	elif currentState == "morto":
-		dead_state(delta)
 
 func normal_state(delta):
 	position.x = position.x + (get_current_speed() * delta * direction)
@@ -123,6 +125,8 @@ func look_at_food(food):
 	lookingAtFood = true
 	
 func look_straight():
+	if currentState == "morto":
+		return
 	currentState = "normal"
 	currentFood  = null
 	rotation = 0
